@@ -15,7 +15,7 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newId, setId] = useState(0);
 
-  const [isComplete, setIsComplete] = useState(false);
+  //const [isComplete, setIsComplete] = useState(false);
 
   const taskInput = document.querySelector("input[type=text]");
   const titleTask: string = taskInput?.getAttribute("value")! //Type 'string | undefined' is not assignable to type 'string'.;
@@ -26,40 +26,59 @@ export function TaskList() {
   const taskObj: Task = {
     id: taskId,
     title: newTaskTitle,
-    isComplete: isComplete
+    isComplete: false
   }
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
 
-    setNewTaskTitle(titleTask);
-    setIsComplete(isComplete);
-    setId(taskId);
+    if (titleTask === undefined) {
+      alert("Digite o nome da tarefa")
+    } else {
+      setNewTaskTitle(titleTask);
 
-    tasks.push(taskObj);
-    setTasks(tasks);
+      setId(taskId);
 
-    console.log(tasks);
+      tasks.push(taskObj);
+      setTasks(tasks);
+      setNewTaskTitle("");
+    }
+    console.log(tasks)
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
 
-    for (let i of tasks) {
-      console.log(i.id, id)
-      if (i.id === id) {
-        if (i.isComplete === isComplete) {
-          setIsComplete(!isComplete);
-          i.isComplete = isComplete;
-        } else {
-          setIsComplete(!isComplete);
-          i.isComplete = isComplete;
-        }
-        console.log(i)
-      }
-    }
+    // for (let i of tasks) {
+    //   //console.log(i.id, id)
+    //   if (i.id === id) {
+    //     if (i.isComplete === taskObj.isComplete) {
+    //       //setIsComplete(!isComplete);
+    //       i.isComplete = !taskObj.isComplete;
+    //       //console.log(i);
+    //       console.log(tasks);
+    //       setTasks(tasks);
+    //       //i.isComplete = isComplete;
+    //     } else {
+    //       // setIsComplete(isComplete);
+    //       // i.isComplete = isComplete;
+    //       i.isComplete = taskObj.isComplete;
+    //       console.log(i.isComplete);
+    //       console.log(tasks)
+    //     }
+    //     //console.log(i)
+    //   }
+    // }
 
-    console.log(tasks, isComplete)
+
+    //console.log(tasks)
+
+    // CRIAÇÃO DE UM NOVO ARRAY PARA RENOVAR O ESTADO DAS TASKS
+    const newTasks = tasks.map(task => task.id === id ? {
+      ...task, isComplete: !task.isComplete
+    } : task);
+
+    setTasks(newTasks);
   }
 
   function handleRemoveTask(id: number) {
